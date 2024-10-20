@@ -1,4 +1,17 @@
 package com.w_farooq_group.user_service.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+@Schema(
+        name = "Response",
+        description = "Schema to hold successful response information "
+)
+@Data @AllArgsConstructor @NoArgsConstructor
 public class ResponseDto {
+    @Schema(description = "Successful response status code")
+    private String responseStatus;
+    @Schema(description = "Successful response status message")
+    private String responseMessage;
 }
