@@ -1,5 +1,6 @@
 package com.w_farooq_group.user_service.service.impl;
 
+import com.w_farooq_group.user_service.dto.UserDto;
 import com.w_farooq_group.user_service.dto.UserProfileDTO;
 import com.w_farooq_group.user_service.entity.User;
 import com.w_farooq_group.user_service.entity.UserProfile;
@@ -42,6 +43,23 @@ public class UserService implements IUserService {
 
     }
 
+    /**
+     * @param userId - UUID
+     * @return - UserDto Object
+     */
+    @Override
+    public UserDto fetchUser(UUID userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User", "id", userId.toString()));
+        UserProfile userProfile = userProfileRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("UserProfile", "id", userId.toString()));
+
+        UserDto userDto = UserMapper.userToUserDto(user, new UserDto());
+        UserProfileDTO userProfileDTO = UserProfileMapper.userProfileToUserProfileDTO(userProfile, new UserProfileDTO());
+        userDto.setUserProfileDTO(userProfileDTO);
+        return userDto;
+    }
+
     private void createAndSaveUserProfile (User user) {
         UserProfile userProfile = new UserProfile();
         userProfile.setUser(user);
@@ -59,8 +77,8 @@ public class UserService implements IUserService {
                 .orElseThrow(() -> new ResourceNotFoundException("User", "id", userId.toString()));
         UserProfile userProfile = userProfileRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("userprofile", "id", userId.toString()));
-        userRepository.delete(user);
         userProfileRepository.delete(userProfile);
+        userRepository.delete(user);
         return true;
     }
 

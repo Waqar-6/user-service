@@ -1,5 +1,6 @@
 package com.w_farooq_group.user_service.service;
 
+import com.w_farooq_group.user_service.dto.UserDto;
 import com.w_farooq_group.user_service.dto.UserProfileDTO;
 import com.w_farooq_group.user_service.requests.RegistrationRequest;
 
@@ -12,6 +13,14 @@ public interface IUserService {
      * @param registrationRequest - RegistrationRequest Object
      */
     void registerUser(RegistrationRequest registrationRequest);
+
+
+    /**
+     *
+     * @param userId - UUID
+     * @return - UserDto Object
+     */
+    UserDto fetchUser (UUID userId);
 
     /**
      *

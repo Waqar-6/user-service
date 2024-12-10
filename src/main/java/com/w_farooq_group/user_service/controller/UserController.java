@@ -4,6 +4,7 @@ import com.w_farooq_group.user_service.constants.ResponseConstants;
 import com.w_farooq_group.user_service.constants.StatusConstants;
 import com.w_farooq_group.user_service.dto.ErrorResponseDto;
 import com.w_farooq_group.user_service.dto.ResponseDto;
+import com.w_farooq_group.user_service.dto.UserDto;
 import com.w_farooq_group.user_service.dto.UserProfileDTO;
 import com.w_farooq_group.user_service.requests.RegistrationRequest;
 import com.w_farooq_group.user_service.service.IUserService;
@@ -67,6 +68,39 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(new ResponseDto(ResponseConstants.RESPONSE_201, StatusConstants.STATUS_201));
     }
+
+    @Operation(
+            summary = "GET user REST API",
+            description = "fetches a single user by id"
+    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "HTTP Status OK"
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "HTTP Status Not Found",
+                    content = @Content(
+                            schema = @Schema(implementation = ErrorResponseDto.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "HTTP Status Internal Server Error",
+                    content = @Content(
+                            schema = @Schema(implementation = ErrorResponseDto.class)
+                    )
+            )
+    })
+
+    @GetMapping("/fetch/{userId}")
+    public ResponseEntity<UserDto> fetchUser (@PathVariable(value = "userId") UUID userId) {
+        UserDto userDto = iUserService.fetchUser(userId);
+        return ResponseEntity.status(HttpStatus.OK).body(userDto);
+    }
+
+
 
     @Operation(
             summary = "UPDATE User REST API",
