@@ -15,15 +15,17 @@ import com.w_farooq_group.user_service.service.IUserService;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Service
-public class UserService implements IUserService {
+public class UserServiceImpl implements IUserService {
 
     private final UserRepository userRepository;
     private final UserProfileRepository userProfileRepository;
 
-    public UserService(UserRepository userRepository, UserProfileRepository userProfileRepository) {
+    public UserServiceImpl(UserRepository userRepository, UserProfileRepository userProfileRepository) {
         this.userRepository = userRepository;
         this.userProfileRepository = userProfileRepository;
     }
@@ -55,9 +57,28 @@ public class UserService implements IUserService {
                 .orElseThrow(() -> new ResourceNotFoundException("UserProfile", "id", userId.toString()));
 
         UserDto userDto = UserMapper.userToUserDto(user, new UserDto());
-        UserProfileDTO userProfileDTO = UserProfileMapper.userProfileToUserProfileDTO(userProfile, new UserProfileDTO());
+        UserProfileDTO userProfileDTO = UserProfileMapper
+                .userProfileToUserProfileDTO(userProfile, new UserProfileDTO());
         userDto.setUserProfileDTO(userProfileDTO);
         return userDto;
+    }
+
+    /**
+     * @return List of UserDto Objects
+     */
+    @Override
+    public List<UserDto> fetchAllUsers() {
+        List<User> allUsers = userRepository.findAll();
+        List<UserDto> userDtoList = new ArrayList<>();
+        for(User user : allUsers) {
+            UserDto userDto = UserMapper.userToUserDto(user, new UserDto());
+            UserProfile userProfile = userProfileRepository.findByUserId(user.getId())
+                    .orElseThrow(() -> new ResourceNotFoundException("UserProfile", "id", user.getId().toString()));
+            UserProfileDTO userProfileDTO = UserProfileMapper.userProfileToUserProfileDTO(userProfile, new UserProfileDTO());
+            userDto.setUserProfileDTO(userProfileDTO);
+            userDtoList.add(userDto);
+        }
+        return userDtoList;
     }
 
     private void createAndSaveUserProfile (User user) {

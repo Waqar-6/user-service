@@ -21,6 +21,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @Tag(
@@ -100,7 +101,24 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(userDto);
     }
 
+    @Operation(summary = "GET All Users REST API", description = "fetches all users")
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "HTTP Status OK"
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "HTTP Internal Server Error",
+                    content = @Content(schema = @Schema(implementation = ErrorResponseDto.class))
+            )
+    })
 
+    @GetMapping(value = "/fetch")
+    public ResponseEntity<List<UserDto>> fetchAllUsers() {
+        List<UserDto> userDtoList = iUserService.fetchAllUsers();
+        return new ResponseEntity<>(userDtoList, HttpStatus.OK);
+    }
 
     @Operation(
             summary = "UPDATE User REST API",

@@ -4,6 +4,7 @@ import com.w_farooq_group.user_service.dto.UserDto;
 import com.w_farooq_group.user_service.dto.UserProfileDTO;
 import com.w_farooq_group.user_service.requests.RegistrationRequest;
 
+import java.util.List;
 import java.util.UUID;
 
 public interface IUserService {
@@ -21,6 +22,12 @@ public interface IUserService {
      * @return - UserDto Object
      */
     UserDto fetchUser (UUID userId);
+
+    /**
+     *
+     * @return List of UserDto Objects
+     */
+    List<UserDto> fetchAllUsers();
 
     /**
      *
