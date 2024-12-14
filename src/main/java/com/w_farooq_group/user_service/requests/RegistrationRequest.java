@@ -31,12 +31,12 @@ public class RegistrationRequest {
 
     private UserRole userRole;
 
-    public RegistrationRequest(String firstName, String lastName, String email, String password) {
+    public RegistrationRequest(String firstName, String lastName, String email, String password, UserRole userRole) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.password = password;
-        this.userRole = UserRole.USER;
+        this.userRole = userRole;
     }
 
     public RegistrationRequest () {}
